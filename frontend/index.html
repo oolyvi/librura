@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Bookly — Personal Library</title>
+    <link rel="stylesheet" href="/app/styles.css">
+</head>
+<body>
+<div id="authView" class="auth-shell">
+    <section class="auth-card">
+        <div class="brand"><span class="brand-mark">B</span>
+            <div><b>BOOKLY</b><small>YOUR PERSONAL READING SPACE</small></div>
+        </div>
+        <h1 id="authTitle">Welcome back</h1>
+        <p class="muted">Keep your books, progress and reading goals in one place.</p>
+        <div class="tabs">
+            <button class="tab active" data-mode="login">Sign in</button>
+            <button class="tab" data-mode="register">Create account</button>
+        </div>
+        <form id="authForm">
+            <div id="nameFields" class="hidden"><label>Full name<input name="name" autocomplete="name"></label><label>Nickname<input
+                    name="nick" autocomplete="nickname"></label></div>
+            <label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input
+                name="password" type="password" required minlength="8" autocomplete="current-password"></label>
+            <button class="primary wide" id="authSubmit">Sign in</button>
+            <p id="authError" class="error"></p></form>
+    </section>
+</div>
+<div id="appView" class="app hidden">
+    <aside class="sidebar">
+        <div class="brand"><span class="brand-mark">B</span>
+            <div><b>BOOKLY</b><small id="brandSub">PERSONAL LIBRARY</small></div>
+        </div>
+        <nav>
+            <button class="nav active" data-page="library">▤ <span id="navLibraryLabel">My library</span></button>
+            <button class="nav user-only" data-page="favorites">♡ <span>Favorites</span></button>
+            <button class="nav user-only" data-page="statistics">▥ <span>Statistics</span></button>
+            <button class="nav admin-only hidden" data-page="users">♙ <span>Users</span></button>
+            <button class="nav" data-page="profile">⚙ <span>Profile</span></button>
+        </nav>
+        <div class="side-bottom">
+            <div class="avatar" id="avatar">B</div>
+            <div class="user-mini"><b id="sideName">Reader</b><small id="sideRole">USER</small></div>
+            <button class="icon-btn" id="logout" title="Sign out">↪</button>
+        </div>
+    </aside>
+    <main class="main">
+        <header class="topbar">
+            <div><span class="eyebrow">YOUR READING JOURNEY</span>
+                <h2 id="pageTitle">My library</h2></div>
+            <div class="top-actions"><span class="role-pill" id="rolePill">USER</span>
+                <button class="primary" id="addBookBtn">＋ Add a book</button>
+            </div>
+        </header>
+        <div id="notice" class="notice hidden"></div>
+        <section id="libraryPage" class="page">
+            <div class="stats-strip">
+                <div><small>ALL BOOKS</small><strong id="allCount">0</strong></div>
+                <div><small>READING</small><strong id="readingCount">0</strong></div>
+                <div><small>COMPLETED</small><strong id="completedCount">0</strong></div>
+                <div><small>WANT TO READ</small><strong id="wantCount">0</strong></div>
+            </div>
+            <div class="toolbar">
+                <div class="search"><span>⌕</span><input id="searchInput" placeholder="Search title or author..."></div>
+                <select id="statusFilter">
+                    <option value="">All shelves</option>
+                    <option value="WANT_TO_READ">Want to read</option>
+                    <option value="READING">Currently reading</option>
+                    <option value="COMPLETED">Completed</option>
+                </select><select id="sortFilter">
+                <option value="newest">Recently added</option>
+                <option value="title">Title A–Z</option>
+                <option value="rating">Highest rated</option>
+            </select></div>
+            <div class="section-heading"><h3 id="shelfTitle">All books</h3><span id="resultCount" class="muted"></span>
+            </div>
+            <div id="bookGrid" class="book-grid"></div>
+        </section>
+        <section id="statisticsPage" class="page hidden">
+            <div class="stats-grid">
+                <article class="stat-card"><small>BOOKS COMPLETED</small><strong id="statCompleted">0</strong><span>All time</span>
+                </article>
+                <article class="stat-card"><small>CURRENTLY READING</small><strong id="statReading">0</strong><span>On your desk</span>
+                </article>
+                <article class="stat-card"><small>WANT TO READ</small><strong
+                        id="statWant">0</strong><span>Up next</span></article>
+                <article class="stat-card"><small>READING PROGRESS</small><strong id="statProgress">0%</strong><span>Average across active books</span>
+                </article>
+            </div>
+            <article class="panel goal-panel">
+                <div><span class="eyebrow">YEARLY CHALLENGE</span>
+                    <h3>Your reading goal</h3>
+                    <p class="muted"><b id="yearDone">0</b> books completed this year</p>
+                    <div class="progress"><span id="goalBar"></span></div>
+                    <small id="goalText">Set a goal to start tracking your year.</small></div>
+                <form id="goalForm" class="goal-form"><label>Books per year<input type="number" min="0" max="500"
+                                                                                  id="goalInput" value="12"></label>
+                    <button class="primary">Save goal</button>
+                </form>
+            </article>
+        </section>
+        <section id="usersPage" class="page hidden">
+            <div class="section-heading"><h3>Platform users</h3>
+                <button class="secondary" id="refreshUsers">↻ Refresh</button>
+            </div>
+            <div id="usersList" class="panel table-wrap"></div>
+            <div id="adminAccountDetail" class="hidden"></div>
+        </section>
+        <section id="profilePage" class="page hidden">
+            <div class="panel profile-panel">
+                <div><span class="eyebrow">ACCOUNT SETTINGS</span>
+                    <h3>Your profile</h3>
+                    <p class="muted">Update your public reader profile.</p></div>
+                <form id="profileForm" class="profile-form"><label>Name<input name="name" required></label><label>Nickname<input
+                        name="nick" required></label><label>Location<input name="location"></label><label>Birth
+                    date<input name="birthDate" type="date"></label><label class="full">Photo URL<input name="photo"
+                                                                                                        type="url"
+                                                                                                        placeholder="https://..."></label>
+                    <button class="primary">Save profile</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+<div id="bookModal" class="modal hidden">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div><span class="eyebrow">YOUR COLLECTION</span>
+                <h3 id="modalTitle">Add a book</h3></div>
+            <button class="icon-btn" id="closeModal">✕</button>
+        </div>
+        <form id="bookForm" class="book-form"><input type="hidden" name="id"><label class="full admin-owner hidden"
+                                                                                    id="adminOwnerField">Add to user
+            account<select name="userId" id="bookOwner"></select></label><label>Book title<input name="title" required></label><label>Author<input
+                name="author" required></label><label>Shelf<select name="status">
+            <option value="WANT_TO_READ">Want to read</option>
+            <option value="READING">Currently reading</option>
+            <option value="COMPLETED">Completed</option>
+        </select></label><label>Rating<select name="rating">
+            <option value="0">Not rated</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select></label><label>Page count<input name="pageCount" type="number" min="0"></label><label>Current
+            page<input name="currentPage" type="number" min="0"></label><label>Price<input name="price" type="number"
+                                                                                           min="0"
+                                                                                           step=".01"></label><label
+                class="user-only">Favorite<select
+                name="isFavorite">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+        </select></label><label class="full">Review<textarea name="review" rows="3"></textarea></label><label
+                class="full">Quotes <small class="muted">(one per line)</small><textarea name="quotes" rows="3"
+                                                                                         placeholder="A memorable line..."></textarea></label>
+            <div class="modal-actions">
+                <button type="button" class="secondary" id="cancelBook">Cancel</button>
+                <button class="primary">Save book</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/app/app.js"></script>
+</body>
+</html>

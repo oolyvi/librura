@@ -1,0 +1,142 @@
+
+# =========================
+# Enums
+# =========================
+
+enum BookStatus {
+  WANT_TO_READ
+  READING
+  COMPLETED
+}
+
+# =========================
+# Types
+# =========================
+
+type Book {
+  id: ID!
+  userId: ID!
+  title: String!
+  author: String!
+  status: BookStatus!
+  isFavorite: Boolean!
+  pageCount: Int
+  currentPage: Int
+  quotes: [String!]
+  price: Float
+  review: String
+  rating: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+  nick: String!
+  location: String
+  birthDate: String
+  photo: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+# =========================
+# Input Types
+# =========================
+
+input CreateBookInput {
+  title: String!
+  author: String!
+  status: BookStatus
+  isFavorite: Boolean
+  pageCount: Int
+  currentPage: Int
+  quotes: [String!]
+  price: Float
+  review: String
+  rating: Int
+}
+
+input UpdateBookInput {
+  title: String
+  author: String
+  status: BookStatus
+  isFavorite: Boolean
+  pageCount: Int
+  currentPage: Int
+  quotes: [String!]
+  price: Float
+  review: String
+  rating: Int
+}
+
+input CreateUserInput {
+  name: String!
+  nick: String!
+  location: String
+  birthDate: String
+  photo: String
+}
+
+input UpdateUserInput {
+  name: String
+  nick: String
+  location: String
+  birthDate: String
+  photo: String
+}
+
+# =========================
+# Queries
+# =========================
+
+type Query {
+  # Users
+  users: [User!]!
+  user(id: ID!): User
+
+  # Reading statistics for the authenticated user
+  myReadingStatistics: ReadingStatistics!
+
+  # Books
+  books: [Book!]!
+  book(id: ID!): Book
+
+  # Filter books
+  favoriteBooks: [Book!]!
+  booksByStatus(status: BookStatus!): [Book!]!
+  searchBooks(search: String!): [Book!]!
+}
+
+# =========================
+# Mutations
+# =========================
+
+type Mutation {
+  # Reading goal
+  setYearlyReadingGoal(goal: Int!): ReadingStatistics!
+
+  # Users
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+
+  # Books
+  createBook(input: CreateBookInput!): Book!
+  updateBook(id: ID!, input: UpdateBookInput!): Book!
+  deleteBook(id: ID!): Boolean!
+
+  # Favorite management
+  toggleFavorite(id: ID!): Book!
+}
+
+type ReadingStatistics {
+  totalCompletedBooks: Int!
+  currentlyReading: Int!
+  wantToRead: Int!
+  readingProgress: Float!
+  yearlyReadingGoal: Int!
+  completedThisYear: Int!
+  yearlyGoalProgress: Float!
+}

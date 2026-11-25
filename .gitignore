@@ -1,0 +1,28 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Go build/test output
+/bin/
+/dist/
+*.exe
+*.out
+*.test
+coverage.out
+
+# IDE/editor files
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+
+# Local binaries
+/server
+/booklibrary
